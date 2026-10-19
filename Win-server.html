@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Шпаргалка — Windows Server (карточки для блокнота)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    font-size: 7.5pt;
+    line-height: 1.22;
+    color: #111;
+    background: #dcdcdc;
+    padding: 8px;
+  }
+
+  .toolbar {
+    position: fixed; top: 10px; right: 10px; z-index: 100;
+    display: flex; gap: 8px;
+  }
+  .toolbar button {
+    padding: 8px 14px; font-size: 10pt; border: none; border-radius: 20px;
+    background: #0078d4; color: #fff; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25); transition: transform .15s;
+  }
+  .toolbar button:hover { transform: scale(1.05); }
+
+  .sheet {
+    width: 210mm; height: 297mm;
+    margin: 0 auto 12px;
+    background: #fff;
+    padding: 6mm;
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+    page-break-after: always;
+    display: flex; flex-direction: column;
+  }
+  .sheet:last-of-type { page-break-after: auto; }
+
+  .sheet-header {
+    text-align: center;
+    font-size: 8pt;
+    color: #555;
+    margin-bottom: 3mm;
+    letter-spacing: .3px;
+  }
+  .sheet-header strong { color: #111; font-size: 9.5pt; }
+
+  .cards {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    gap: 3mm;
+  }
+
+  .card {
+    border: 1.2px dashed #888;
+    border-radius: 2px;
+    padding: 2mm 2.5mm 1.5mm;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    background: #fff;
+    position: relative;
+  }
+  .card::before {
+    content: "✂";
+    position: absolute;
+    top: -6px; left: 4px;
+    background: #fff;
+    padding: 0 2px;
+    font-size: 7pt;
+    color: #999;
+  }
+
+  .card h3 {
+    font-size: 8.5pt;
+    margin-bottom: 1.2mm;
+    padding-bottom: .8mm;
+    border-bottom: 1.3px solid;
+    display: flex; align-items: center; gap: 1.5mm;
+    white-space: nowrap;
+  }
+  .srv h3 { color: #0078d4; border-color: #0078d4; }
+  .srv .ps h3 { color: #6a1a8a; border-color: #6a1a8a; }
+
+  .card table { width: 100%; border-collapse: collapse; }
+  .card td {
+    padding: .55mm .8mm;
+    border-bottom: 1px dotted #e2e2e2;
+    vertical-align: top;
+    font-size: 7pt;
+    line-height: 1.18;
+  }
+  .card tr:last-child td { border-bottom: none; }
+
+  .card td:first-child {
+    width: 48%;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 6.8pt;
+    font-weight: 700;
+    color: #b30000;
+  }
+  .srv .ps td:first-child { color: #6a1a8a; }
+  .card td:last-child { color: #222; }
+
+  @media print {
+    @page { size: A4; margin: 0; }
+    body { background: #fff; padding: 0; }
+    .toolbar { display: none !important; }
+    .sheet {
+      width: 210mm; height: 297mm;
+      margin: 0; padding: 6mm;
+      box-shadow: none;
+    }
+    .card { border-color: #555; }
+    .card::before { color: #555; }
+  }
+
+  @media screen and (max-width: 860px) {
+    .sheet { width: 100%; height: auto; padding: 10px; }
+    .cards { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .card { min-height: 80mm; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button onclick="window.print()">🖨 Печать</button>
+</div>
+
+<!-- ======================= СТРАНИЦА 1 — БАЗОВОЕ АДМИНИСТРИРОВАНИЕ ======================= -->
+<div class="sheet">
+  <div class="sheet-header">
+    <strong>Windows Server</strong> · карточки для блокнота · вырезать по пунктиру ✂
+  </div>
+
+  <div class="cards">
+
+    <!-- КАРТОЧКА 1: ПЕРВОНАЧАЛЬНАЯ НАСТРОЙКА (SConfig) -->
+    <div class="card srv">
+      <h3>🖥️ Первичная настройка (SConfig)</h3>
+      <table>
+        <tr><td>sconfig</td><td>Текстовое меню настройки</td></tr>
+        <tr><td>Опция 1</td><td>Domain / Workgroup</td></tr>
+        <tr><td>Опция 2</td><td>Computer Name (имя)</td></tr>
+        <tr><td>Опция 3</td><td>Add Local Admin</td></tr>
+        <tr><td>Опция 4</td><td>Remote Management</td></tr>
+        <tr><td>Опция 5</td><td>Windows Update Settings</td></tr>
+        <tr><td>Опция 7</td><td>Remote Desktop (RDP)</td></tr>
+        <tr><td>Опция 8</td><td>Network Settings (IP/DNS)</td></tr>
+        <tr><td>Опция 9</td><td>Date and Time</td></tr>
+        <tr><td>Опция 12</td><td>Restart Server</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 2: БАЗОВЫЕ КОМАНДЫ PowerShell -->
+    <div class="card srv ps">
+      <h3>⚡ PowerShell — База</h3>
+      <table>
+        <tr><td>Get-Help &lt;cmd&gt; -Full</td><td>Справка по команде</td></tr>
+        <tr><td>Update-Help -Force</td><td>Обновить справку</td></tr>
+        <tr><td>Get-Command *service*</td><td>Поиск команд</td></tr>
+        <tr><td>Get-ComputerInfo</td><td>Инфо о системе</td></tr>
+        <tr><td>Get-Service</td><td>Список служб</td></tr>
+        <tr><td>Get-Process</td><td>Список процессов</td></tr>
+        <tr><td>Get-ChildItem</td><td>Список файлов (dir)</td></tr>
+        <tr><td>Copy-Item</td><td>Копировать файл</td></tr>
+        <tr><td>Select-String</td><td>Поиск текста (findstr)</td></tr>
+        <tr><td>Get-PSDrive -PSProvider FileSystem</td><td>Место на дисках</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 3: УПРАВЛЕНИЕ СЛУЖБАМИ И ПРОЦЕССАМИ -->
+    <div class="card srv ps">
+      <h3>⚙️ Службы и процессы</h3>
+      <table>
+        <tr><td>Get-Service | Where-Object Status -eq 'Running'</td><td>Запущенные службы</td></tr>
+        <tr><td>Get-Service | Where-Object Status -eq 'Stopped' | Where-Object StartType -eq 'Automatic'</td><td>Остановленные авто-службы</td></tr>
+        <tr><td>Start-Service -Name "Spooler"</td><td>Запустить службу</td></tr>
+        <tr><td>Stop-Service -Name "Spooler" -Force</td><td>Остановить службу</td></tr>
+        <tr><td>Restart-Service -Name "W3SVC" -Force</td><td>Перезапустить службу</td></tr>
+        <tr><td>Get-Process | Sort-Object CPU -Descending | Select-Object -First 10</td><td>Топ процессов по CPU</td></tr>
+        <tr><td>Stop-Process -Id &lt;PID&gt; -Force</td><td>Убить процесс по PID</td></tr>
+        <tr><td>Stop-Process -Name "notepad" -Force</td><td>Убить процесс по имени</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 4: ЛОКАЛЬНЫЕ ПОЛЬЗОВАТЕЛИ И ГРУППЫ -->
+    <div class="card srv ps">
+      <h3>👤 Локальные пользователи</h3>
+      <table>
+        <tr><td>net user Administrator &lt;пароль&gt;</td><td>Сменить пароль админа</td></tr>
+        <tr><td>net user opsadmin "P@ss!" /add</td><td>Создать пользователя</td></tr>
+        <tr><td>net localgroup administrators opsadmin /add</td><td>Добавить в админы</td></tr>
+        <tr><td>net user Administrator /active:no</td><td>Отключить встроенного админа</td></tr>
+        <tr><td>Get-LocalUser</td><td>Список локальных юзеров</td></tr>
+        <tr><td>Get-LocalGroupMember -Group "Administrators"</td><td>Состав группы админов</td></tr>
+        <tr><td>New-LocalUser -Name "operator" -Password (Read-Host -AsSecureString "Password")</td><td>Создать юзера (PS)</td></tr>
+        <tr><td>Add-LocalGroupMember -Group "Administrators" -Member "operator"</td><td>Добавить в группу (PS)</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 5: СЕТЬ — БАЗОВЫЕ КОМАНДЫ -->
+    <div class="card srv">
+      <h3>🌐 Сеть — База (CMD / PS)</h3>
+      <table>
+        <tr><td>ipconfig /all</td><td>Полная конфигурация TCP/IP</td></tr>
+        <tr><td>Get-NetIPConfiguration</td><td>Аналог ipconfig (PS)</td></tr>
+        <tr><td>ipconfig /flushdns</td><td>Очистить DNS-кэш</td></tr>
+        <tr><td>ipconfig /release</td><td>Отпустить IP (DHCP)</td></tr>
+        <tr><td>ipconfig /renew</td><td>Запросить новый IP</td></tr>
+        <tr><td>ping &lt;хост&gt;</td><td>Проверка связи</td></tr>
+        <tr><td>Test-NetConnection &lt;хост&gt; -Port &lt;порт&gt;</td><td>Проверка порта (PS)</td></tr>
+        <tr><td>tracert &lt;хост&gt;</td><td>Трассировка</td></tr>
+        <tr><td>nslookup &lt;домен&gt;</td><td>DNS-запрос</td></tr>
+        <tr><td>netstat -ano</td><td>Соединения + PID</td></tr>
+        <tr><td>Get-NetTCPConnection</td><td>Соединения (PS)</td></tr>
+        <tr><td>arp -a</td><td>ARP-таблица</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 6: СЕТЬ — НАСТРОЙКА -->
+    <div class="card srv ps">
+      <h3>🔧 Сеть — Настройка (PS)</h3>
+      <table>
+        <tr><td>Get-NetAdapter</td><td>Список сетевых адаптеров</td></tr>
+        <tr><td>New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 192.168.1.10 -PrefixLength 24 -DefaultGateway 192.168.1.1</td><td>Задать статический IP</td></tr>
+        <tr><td>Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses ("8.8.8.8","1.1.1.1")</td><td>Задать DNS</td></tr>
+        <tr><td>Set-NetIPInterface -InterfaceAlias "Ethernet" -Dhcp Disabled</td><td>Отключить DHCP</td></tr>
+        <tr><td>Get-NetFirewallProfile</td><td>Профили брандмауэра</td></tr>
+        <tr><td>New-NetFirewallRule -DisplayName "Allow RDP" -Direction Inbound -LocalPort 3389 -Protocol TCP -Action Allow</td><td>Открыть порт</td></tr>
+        <tr><td>netsh interface portproxy add v4tov4 listenport=80 connectport=8080 connectaddress=192.168.1.100</td><td>Проброс порта</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 7: ДИАГНОСТИКА И ЛОГИ -->
+    <div class="card srv ps">
+      <h3>🔍 Диагностика и логи</h3>
+      <table>
+        <tr><td>Get-EventLog -LogName System -EntryType Error -Newest 20</td><td>Последние 20 ошибок</td></tr>
+        <tr><td>Get-WinEvent -LogName System -MaxEvents 50</td><td>События (новый способ)</td></tr>
+        <tr><td>Get-EventLog -LogName System -Source "Service Control Manager" -Newest 10</td><td>События служб</td></tr>
+        <tr><td>Get-PSDrive -PSProvider FileSystem</td><td>Свободное место на дисках</td></tr>
+        <tr><td>chkdsk &lt;диск&gt;: /f /r</td><td>Проверка и исправление диска</td></tr>
+        <tr><td>sfc /scannow</td><td>Проверка системных файлов</td></tr>
+        <tr><td>Get-WindowsFeature</td><td>Список установленных ролей</td></tr>
+        <tr><td>Get-WindowsFeature -Name *Hyper*</td><td>Проверка роли Hyper-V</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 8: УСТАНОВКА РОЛЕЙ -->
+    <div class="card srv ps">
+      <h3>📦 Установка ролей (PS)</h3>
+      <table>
+        <tr><td>Get-WindowsFeature</td><td>Доступные роли и функции</td></tr>
+        <tr><td>Install-WindowsFeature -Name DHCP -IncludeManagementTools</td><td>Установить DHCP</td></tr>
+        <tr><td>Install-WindowsFeature -Name DNS -IncludeManagementTools</td><td>Установить DNS</td></tr>
+        <tr><td>Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools</td><td>Установить AD DS</td></tr>
+        <tr><td>Install-WindowsFeature -Name Hyper-V -IncludeManagementTools -Restart</td><td>Установить Hyper-V</td></tr>
+        <tr><td>Install-WindowsFeature -Name Web-Server -IncludeManagementTools</td><td>Установить IIS</td></tr>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ======================= СТРАНИЦА 2 — РОЛИ И СЛУЖБЫ ======================= -->
+<div class="sheet">
+  <div class="sheet-header">
+    <strong>Windows Server</strong> · Роли: AD, DNS, DHCP, Hyper-V, IIS · карточки ✂
+  </div>
+
+  <div class="cards">
+
+    <!-- КАРТОЧКА 1: ACTIVE DIRECTORY (AD DS) -->
+    <div class="card srv ps">
+      <h3>🏢 Active Directory (AD DS)</h3>
+      <table>
+        <tr><td>Import-Module ActiveDirectory</td><td>Загрузить модуль AD</td></tr>
+        <tr><td>Get-ADUser -Identity "jsmith" -Properties *</td><td>Инфо о пользователе</td></tr>
+        <tr><td>Get-ADUser -Filter "Name -like '*Johnson*'" | Select-Object Name, SamAccountName, Enabled</td><td>Поиск юзеров</td></tr>
+        <tr><td>New-ADUser -Name "Jane Doe" -SamAccountName "jdoe" -UserPrincipalName "jdoe@company.com" -GivenName "Jane" -Surname "Doe" -Department "Engineering" -AccountPassword (ConvertTo-SecureString "TempPass123!" -AsPlainText -Force) -Enabled $true -ChangePasswordAtLogon $true</td><td>Создать юзера</td></tr>
+        <tr><td>Disable-ADAccount -Identity "jdoe"</td><td>Отключить аккаунт</td></tr>
+        <tr><td>Get-ADGroup -Filter *</td><td>Список групп</td></tr>
+        <tr><td>Add-ADGroupMember -Identity "Domain Admins" -Members "jdoe"</td><td>Добавить в группу</td></tr>
+        <tr><td>Get-ADComputer -Filter * | Select-Object Name, OperatingSystem</td><td>Список компьютеров</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 2: DNS-СЕРВЕР -->
+    <div class="card srv ps">
+      <h3>🌍 DNS-Сервер</h3>
+      <table>
+        <tr><td>Get-DnsServerZone</td><td>Список зон</td></tr>
+        <tr><td>Add-DnsServerPrimaryZone -Name "company.local" -ReplicationScope Forest</td><td>Создать прямую зону</td></tr>
+        <tr><td>Add-DnsServerPrimaryZone -NetworkID "192.168.0.0/24" -ReplicationScope Forest</td><td>Создать обратную зону</td></tr>
+        <tr><td>Add-DnsServerResourceRecordA -Name "www" -ZoneName "company.local" -IPv4Address "192.168.1.10"</td><td>Добавить A-запись</td></tr>
+        <tr><td>Add-DnsServerResourceRecordCName -Name "mail" -HostNameAlias "mailserver.company.local" -ZoneName "company.local"</td><td>Добавить CNAME</td></tr>
+        <tr><td>Get-DnsServerResourceRecord -ZoneName "company.local"</td><td>Записи в зоне</td></tr>
+        <tr><td>Remove-DnsServerResourceRecord -ZoneName "company.local" -Name "www" -RRType A</td><td>Удалить запись</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 3: DHCP-СЕРВЕР -->
+    <div class="card srv ps">
+      <h3>📡 DHCP-Сервер</h3>
+      <table>
+        <tr><td>Get-DhcpServerv4Scope</td><td>Список областей (scope)</td></tr>
+        <tr><td>Add-DhcpServerv4Scope -Name "LAN" -StartRange 192.168.10.100 -EndRange 192.168.10.200 -SubnetMask 255.255.255.0</td><td>Создать область</td></tr>
+        <tr><td>Set-DhcpServerv4OptionValue -ScopeId 192.168.10.0 -Router 192.168.10.1 -DnsServer 192.168.10.10</td><td>Настроить опции (шлюз, DNS)</td></tr>
+        <tr><td>Add-DhcpServerv4Reservation -ScopeId 192.168.10.0 -IPAddress 192.168.10.150 -ClientId "00-11-22-33-44-55"</td><td>Зарезервировать IP по MAC</td></tr>
+        <tr><td>Get-DhcpServerv4Lease -ScopeId 192.168.10.0</td><td>Активные аренды</td></tr>
+        <tr><td>Add-DhcpServerInDC -DnsName "dhcp.company.local"</td><td>Авторизовать DHCP в AD</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 4: HYPER-V -->
+    <div class="card srv ps">
+      <h3>💻 Hyper-V</h3>
+      <table>
+        <tr><td>Get-VM</td><td>Список виртуальных машин</td></tr>
+        <tr><td>New-VM -Name "TestVM" -MemoryStartupBytes 2GB -NewVHDPath "C:\VMs\TestVM.vhdx" -NewVHDSizeBytes 40GB</td><td>Создать ВМ</td></tr>
+        <tr><td>Start-VM -Name "TestVM"</td><td>Запустить ВМ</td></tr>
+        <tr><td>Stop-VM -Name "TestVM" -Force</td><td>Остановить ВМ</td></tr>
+        <tr><td>Checkpoint-VM -Name "TestVM" -SnapshotName "BeforeUpdate"</td><td>Создать контрольную точку</td></tr>
+        <tr><td>Get-VMSnapshot -VMName "TestVM"</td><td>Список контрольных точек</td></tr>
+        <tr><td>Get-VMNetworkAdapter -VMName "TestVM"</td><td>Сетевые адаптеры ВМ</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 5: IIS (ВЕБ-СЕРВЕР) -->
+    <div class="card srv ps">
+      <h3>🌐 IIS (Веб-сервер)</h3>
+      <table>
+        <tr><td>Get-WindowsFeature Web-Server</td><td>Проверить роль IIS</td></tr>
+        <tr><td>Install-WindowsFeature Web-Server -IncludeManagementTools</td><td>Установить IIS</td></tr>
+        <tr><td>Get-Website</td><td>Список сайтов</td></tr>
+        <tr><td>New-Website -Name "MySite" -PhysicalPath "C:\inetpub\mysite" -Port 8080</td><td>Создать сайт</td></tr>
+        <tr><td>Start-Website -Name "MySite"</td><td>Запустить сайт</td></tr>
+        <tr><td>Get-WebBinding -Name "MySite"</td><td>Привязки сайта</td></tr>
+        <tr><td>iisreset</td><td>Перезапустить IIS</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 6: РЕЗЕРВНОЕ КОПИРОВАНИЕ -->
+    <div class="card srv ps">
+      <h3>💾 Резервное копирование</h3>
+      <table>
+        <tr><td>wbadmin start backup -backupTarget:E: -include:C: -allCritical -quiet</td><td>Запустить бэкап</td></tr>
+        <tr><td>wbadmin get versions</td><td>Список версий бэкапов</td></tr>
+        <tr><td>wbadmin get items -version:&lt;версия&gt;</td><td>Элементы бэкапа</td></tr>
+        <tr><td>wbadmin start systemstatebackup -backupTarget:E:</td><td>Бэкап состояния системы</td></tr>
+        <tr><td>Get-WBSummary</td><td>Сводка бэкапов (PS)</td></tr>
+        <tr><td>Get-WBPolicy</td><td>Политика бэкапов</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 7: ОБНОВЛЕНИЯ И ПИТАНИЕ -->
+    <div class="card srv ps">
+      <h3>🔄 Обновления и питание</h3>
+      <table>
+        <tr><td>Get-WindowsUpdate</td><td>Список обновлений</td></tr>
+        <tr><td>Install-WindowsUpdate -AcceptAll -AutoReboot</td><td>Установить все</td></tr>
+        <tr><td>Get-HotFix</td><td>Установленные обновления</td></tr>
+        <tr><td>shutdown /s /t 0</td><td>Выключить сервер</td></tr>
+        <tr><td>shutdown /r /t 0</td><td>Перезагрузить сервер</td></tr>
+        <tr><td>Restart-Computer -Force</td><td>Перезагрузка (PS)</td></tr>
+        <tr><td>Stop-Computer -Force</td><td>Выключение (PS)</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 8: БЫЗОВЫЕ КОМАНДЫ CMD (ДЛЯ СЕРВЕРА) -->
+    <div class="card srv">
+      <h3>⚫ CMD — Полезное на сервере</h3>
+      <table>
+        <tr><td>systeminfo</td><td>Инфо о системе</td></tr>
+        <tr><td>hostname</td><td>Имя сервера</td></tr>
+        <tr><td>whoami</td><td>Текущий пользователь</td></tr>
+        <tr><td>tasklist</td><td>Список процессов</td></tr>
+        <tr><td>taskkill /f /im &lt;exe&gt;</td><td>Убить процесс</td></tr>
+        <tr><td>gpupdate /force</td><td>Обновить групповые политики</td></tr>
+        <tr><td>gpresult /r</td><td>Результат политик</td></tr>
+        <tr><td>net share</td><td>Общие ресурсы</td></tr>
+        <tr><td>net use</td><td>Подключить сетевой диск</td></tr>
+        <tr><td>sc query</td><td>Статус служб</td></tr>
+        <tr><td>eventvwr</td><td>Просмотр событий</td></tr>
+        <tr><td>regedit</td><td>Редактор реестра</td></tr>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

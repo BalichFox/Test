@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Шпаргалка — карточки для блокнота (A4 → вырезать)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    font-size: 7.5pt;
+    line-height: 1.22;
+    color: #111;
+    background: #dcdcdc;
+    padding: 8px;
+  }
+
+  /* ===== КНОПКА ПЕЧАТИ ===== */
+  .toolbar {
+    position: fixed; top: 10px; right: 10px; z-index: 100;
+    display: flex; gap: 8px;
+  }
+  .toolbar button {
+    padding: 8px 14px; font-size: 10pt; border: none; border-radius: 20px;
+    background: #0078d4; color: #fff; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25); transition: transform .15s;
+  }
+  .toolbar button:hover { transform: scale(1.05); }
+
+  /* ===== ЛИСТ A4 ===== */
+  .sheet {
+    width: 210mm; height: 297mm;
+    margin: 0 auto 12px;
+    background: #fff;
+    padding: 6mm;
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+    page-break-after: always;
+    display: flex; flex-direction: column;
+  }
+  .sheet:last-of-type { page-break-after: auto; }
+
+  .sheet-header {
+    text-align: center;
+    font-size: 8pt;
+    color: #555;
+    margin-bottom: 3mm;
+    letter-spacing: .3px;
+  }
+  .sheet-header strong { color: #111; font-size: 9.5pt; }
+
+  /* ===== СЕТКА КАРТОЧЕК ===== */
+  .cards {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    gap: 3mm;
+  }
+
+  /* ===== КАРТОЧКА ===== */
+  .card {
+    border: 1.2px dashed #888;
+    border-radius: 2px;
+    padding: 2mm 2.5mm 1.5mm;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    background: #fff;
+    position: relative;
+  }
+  .card::before {
+    content: "✂";
+    position: absolute;
+    top: -6px; left: 4px;
+    background: #fff;
+    padding: 0 2px;
+    font-size: 7pt;
+    color: #999;
+  }
+
+  .card h3 {
+    font-size: 8.5pt;
+    margin-bottom: 1.2mm;
+    padding-bottom: .8mm;
+    border-bottom: 1.3px solid;
+    display: flex; align-items: center; gap: 1.5mm;
+    white-space: nowrap;
+  }
+  .win h3  { color: #0078d4; border-color: #0078d4; }
+  .cmd h3  { color: #6a1a8a; border-color: #6a1a8a; }
+  .lin h3  { color: #a85a00; border-color: #a85a00; }
+
+  .card table { width: 100%; border-collapse: collapse; }
+  .card td {
+    padding: .55mm .8mm;
+    border-bottom: 1px dotted #e2e2e2;
+    vertical-align: top;
+    font-size: 7pt;
+    line-height: 1.18;
+  }
+  .card tr:last-child td { border-bottom: none; }
+
+  .card td:first-child {
+    width: 47%;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 6.8pt;
+    font-weight: 700;
+    color: #b30000;
+  }
+  .cmd td:first-child { color: #6a1a8a; }
+  .lin td:first-child { color: #006633; }
+  .card td:last-child { color: #222; }
+
+  /* ===== ПЕЧАТЬ ===== */
+  @media print {
+    @page { size: A4; margin: 0; }
+
+    body { background: #fff; padding: 0; }
+    .toolbar { display: none !important; }
+    .sheet {
+      width: 210mm; height: 297mm;
+      margin: 0; padding: 6mm;
+      box-shadow: none;
+    }
+    .card { border-color: #555; }
+    .card::before { color: #555; }
+  }
+
+  /* ===== ЭКРАН: адаптив ===== */
+  @media screen and (max-width: 860px) {
+    .sheet { width: 100%; height: auto; padding: 10px; }
+    .cards { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .card { min-height: 80mm; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button onclick="window.print()">🖨 Печать</button>
+</div>
+
+<!-- ======================= СТРАНИЦА 1 — WINDOWS ======================= -->
+<div class="sheet">
+  <div class="sheet-header">
+    <strong>Windows</strong> · карточки для блокнота · вырезать по пунктиру ✂
+  </div>
+
+  <div class="cards">
+
+    <!-- КАРТОЧКА 1: БАЗОВЫЕ ГОРЯЧИЕ КЛАВИШИ -->
+    <div class="card win">
+      <h3>🪟 Горячие клавиши</h3>
+      <table>
+        <tr><td>Ctrl + C</td><td>Копировать</td></tr>
+        <tr><td>Ctrl + V</td><td>Вставить</td></tr>
+        <tr><td>Ctrl + X</td><td>Вырезать</td></tr>
+        <tr><td>Ctrl + Z</td><td>Отменить</td></tr>
+        <tr><td>Ctrl + Y</td><td>Повторить</td></tr>
+        <tr><td>Ctrl + A</td><td>Выделить всё</td></tr>
+        <tr><td>Ctrl + S</td><td>Сохранить</td></tr>
+        <tr><td>Ctrl + F</td><td>Поиск</td></tr>
+        <tr><td>Ctrl + P</td><td>Печать</td></tr>
+        <tr><td>Alt + Tab</td><td>Переключение окон</td></tr>
+        <tr><td>Alt + F4</td><td>Закрыть окно</td></tr>
+        <tr><td>Shift + Del</td><td>Удалить безвозвратно</td></tr>
+        <tr><td>F2 / F5</td><td>Переименовать / обновить</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 2: WIN КЛАВИША -->
+    <div class="card win">
+      <h3>⌨️ Клавиша Win</h3>
+      <table>
+        <tr><td>Win / Ctrl+Esc</td><td>Меню «Пуск»</td></tr>
+        <tr><td>Win + E</td><td>Проводник</td></tr>
+        <tr><td>Win + D</td><td>Рабочий стол</td></tr>
+        <tr><td>Win + L</td><td>Заблокировать</td></tr>
+        <tr><td>Win + I</td><td>Параметры</td></tr>
+        <tr><td>Win + X</td><td>Power User меню</td></tr>
+        <tr><td>Win + R</td><td>«Выполнить»</td></tr>
+        <tr><td>Win + V</td><td>История буфера</td></tr>
+        <tr><td>Win + Tab</td><td>Задачи</td></tr>
+        <tr><td>Win + Shift + S</td><td>Снимок фрагмента</td></tr>
+        <tr><td>Win + Ctrl + D</td><td>Новый вирт. стол</td></tr>
+        <tr><td>Win + Ctrl + ←/→</td><td>Столы</td></tr>
+        <tr><td>Win + ↑↓←→</td><td>Прикрепить окно</td></tr>
+        <tr><td>Ctrl + Shift + Esc</td><td>Диспетчер задач</td></tr>
+        <tr><td>Win + PrtScn</td><td>Снимок в файл</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 3: RUN КОМАНДЫ -->
+    <div class="card win">
+      <h3>▶️ Окно «Выполнить»</h3>
+      <table>
+        <tr><td>cmd</td><td>Командная строка</td></tr>
+        <tr><td>powershell</td><td>PowerShell</td></tr>
+        <tr><td>control</td><td>Панель управления</td></tr>
+        <tr><td>appwiz.cpl</td><td>Установка программ</td></tr>
+        <tr><td>ncpa.cpl</td><td>Сетевые подключения</td></tr>
+        <tr><td>sysdm.cpl</td><td>Свойства системы</td></tr>
+        <tr><td>devmgmt.msc</td><td>Диспетчер устройств</td></tr>
+        <tr><td>diskmgmt.msc</td><td>Управление дисками</td></tr>
+        <tr><td>services.msc</td><td>Службы</td></tr>
+        <tr><td>regedit</td><td>Реестр</td></tr>
+        <tr><td>msconfig</td><td>Конфигурация</td></tr>
+        <tr><td>cleanmgr</td><td>Очистка диска</td></tr>
+        <tr><td>msinfo32</td><td>Сведения о системе</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 4: CMD ФАЙЛЫ -->
+    <div class="card cmd">
+      <h3>⚫ CMD — Файлы</h3>
+      <table>
+        <tr><td>dir</td><td>Содержимое папки</td></tr>
+        <tr><td>cd &lt;путь&gt;</td><td>Перейти в папку</td></tr>
+        <tr><td>md / mkdir</td><td>Создать папку</td></tr>
+        <tr><td>rd / rmdir</td><td>Удалить папку</td></tr>
+        <tr><td>copy</td><td>Копировать файл</td></tr>
+        <tr><td>move</td><td>Переместить</td></tr>
+        <tr><td>del / erase</td><td>Удалить файл</td></tr>
+        <tr><td>ren / rename</td><td>Переименовать</td></tr>
+        <tr><td>type &lt;файл&gt;</td><td>Содержимое файла</td></tr>
+        <tr><td>tree</td><td>Дерево каталогов</td></tr>
+        <tr><td>cls</td><td>Очистить экран</td></tr>
+        <tr><td>help</td><td>Справка</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 5: CMD СИСТЕМА -->
+    <div class="card cmd">
+      <h3>⚙️ CMD — Система</h3>
+      <table>
+        <tr><td>systeminfo</td><td>Инфо о системе</td></tr>
+        <tr><td>ver</td><td>Версия Windows</td></tr>
+        <tr><td>hostname</td><td>Имя ПК</td></tr>
+        <tr><td>whoami</td><td>Пользователь</td></tr>
+        <tr><td>tasklist</td><td>Список процессов</td></tr>
+        <tr><td>taskkill /f /im &lt;exe&gt;</td><td>Убить процесс</td></tr>
+        <tr><td>shutdown /s /t 0</td><td>Выключить</td></tr>
+        <tr><td>shutdown /r /t 0</td><td>Перезагрузить</td></tr>
+        <tr><td>sfc /scannow</td><td>Восстановить</td></tr>
+        <tr><td>chkdsk &lt;диск&gt;:</td><td>Проверка диска</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 6: CMD СЕТЬ -->
+    <div class="card cmd">
+      <h3>🌐 CMD — Сеть</h3>
+      <table>
+        <tr><td>ipconfig</td><td>IP и настройки</td></tr>
+        <tr><td>ipconfig /all</td><td>Полная инфо</td></tr>
+        <tr><td>ipconfig /release</td><td>Отпустить IP</td></tr>
+        <tr><td>ipconfig /renew</td><td>Новый IP</td></tr>
+        <tr><td>ipconfig /flushdns</td><td>Сброс DNS</td></tr>
+        <tr><td>ping &lt;хост&gt;</td><td>Проверка связи</td></tr>
+        <tr><td>tracert &lt;хост&gt;</td><td>Трассировка</td></tr>
+        <tr><td>pathping &lt;хост&gt;</td><td>Трасса + потери</td></tr>
+        <tr><td>nslookup &lt;домен&gt;</td><td>DNS-запрос</td></tr>
+        <tr><td>netstat -ano</td><td>Соединения + PID</td></tr>
+        <tr><td>getmac</td><td>MAC-адреса</td></tr>
+        <tr><td>arp -a</td><td>ARP-таблица</td></tr>
+        <tr><td>route print</td><td>Маршруты</td></tr>
+        <tr><td>netsh wlan show profiles</td><td>Wi-Fi профили</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 7: NET / УТИЛИТЫ -->
+    <div class="card cmd">
+      <h3>🔧 CMD — Утилиты и net</h3>
+      <table>
+        <tr><td>net view</td><td>Сетевые ресурсы</td></tr>
+        <tr><td>net use</td><td>Подключить диск</td></tr>
+        <tr><td>net user</td><td>Учётные записи</td></tr>
+        <tr><td>net share</td><td>Общие ресурсы</td></tr>
+        <tr><td>curl &lt;url&gt;</td><td>HTTP-запрос</td></tr>
+        <tr><td>notepad</td><td>Блокнот</td></tr>
+        <tr><td>calc</td><td>Калькулятор</td></tr>
+        <tr><td>osk</td><td>Экранная клавиатура</td></tr>
+        <tr><td>explorer</td><td>Проводник</td></tr>
+        <tr><td>exit</td><td>Закрыть CMD</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 8: ШПАРГАЛКА ПРО ПЕЧАТЬ -->
+    <div class="card win">
+      <h3>💡 Подсказки</h3>
+      <table>
+        <tr><td>Ctrl + P</td><td>Печать</td></tr>
+        <tr><td>A4</td><td>Формат бумаги</td></tr>
+        <tr><td>Поля 0</td><td>Или «минимальные»</td></tr>
+        <tr><td>Масштаб</td><td>100% / «Реальный»</td></tr>
+        <tr><td>Фон</td><td>Включить графику</td></tr>
+        <tr><td>✂</td><td>Резать по пунктиру</td></tr>
+        <tr><td>Клей</td><td>ПВА или клей-карандаш</td></tr>
+        <tr><td>Блокнот</td><td>Карточки = разделы</td></tr>
+      </table>
+      <div style="margin-top:2mm;font-size:6.5pt;color:#666;line-height:1.3;">
+        Каждая карточка — отдельная тема. Вырежьте и вклейте в нужный раздел блокнота.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ======================= СТРАНИЦА 2 — LINUX ======================= -->
+<div class="sheet">
+  <div class="sheet-header">
+    <strong>Linux</strong> · карточки для блокнота · вырезать по пунктиру ✂
+  </div>
+
+  <div class="cards">
+
+    <!-- КАРТОЧКА 1: НАВИГАЦИЯ -->
+    <div class="card lin">
+      <h3>🐧 Навигация</h3>
+      <table>
+        <tr><td>pwd</td><td>Текущий каталог</td></tr>
+        <tr><td>ls / ls -la</td><td>Список файлов</td></tr>
+        <tr><td>cd &lt;путь&gt;</td><td>Перейти в каталог</td></tr>
+        <tr><td>cd ~ / cd ..</td><td>Домой / выше</td></tr>
+        <tr><td>whoami</td><td>Текущий юзер</td></tr>
+        <tr><td>uname -a</td><td>Инфо о ядре</td></tr>
+        <tr><td>uptime</td><td>Время работы</td></tr>
+        <tr><td>date</td><td>Дата и время</td></tr>
+        <tr><td>history</td><td>История команд</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 2: ФАЙЛЫ -->
+    <div class="card lin">
+      <h3>📁 Файлы и папки</h3>
+      <table>
+        <tr><td>touch &lt;файл&gt;</td><td>Создать файл</td></tr>
+        <tr><td>mkdir &lt;имя&gt;</td><td>Создать каталог</td></tr>
+        <tr><td>mkdir -p &lt;путь&gt;</td><td>Вложенные</td></tr>
+        <tr><td>cp &lt;откуда&gt; &lt;куда&gt;</td><td>Копировать</td></tr>
+        <tr><td>cp -r &lt;dir&gt;</td><td>Копировать папку</td></tr>
+        <tr><td>mv</td><td>Переместить / переимен.</td></tr>
+        <tr><td>rm &lt;файл&gt;</td><td>Удалить файл</td></tr>
+        <tr><td>rm -r &lt;папка&gt;</td><td>Удалить каталог</td></tr>
+        <tr><td>cat &lt;файл&gt;</td><td>Содержимое</td></tr>
+        <tr><td>less &lt;файл&gt;</td><td>Постранично</td></tr>
+        <tr><td>head -n 20</td><td>Первые 20 строк</td></tr>
+        <tr><td>tail -n 20</td><td>Последние 20 строк</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 3: ПОИСК И ПРАВА -->
+    <div class="card lin">
+      <h3>🔍 Поиск и права</h3>
+      <table>
+        <tr><td>grep &lt;ш&gt; &lt;файл&gt;</td><td>Поиск строк</td></tr>
+        <tr><td>grep -r &lt;ш&gt; &lt;dir&gt;</td><td>Рекурсивно</td></tr>
+        <tr><td>find &lt;путь&gt; -name &lt;ш&gt;</td><td>Поиск файлов</td></tr>
+        <tr><td>which &lt;команда&gt;</td><td>Путь к команде</td></tr>
+        <tr><td>chmod &lt;права&gt; &lt;ф&gt;</td><td>Права доступа</td></tr>
+        <tr><td>chmod +x &lt;ф&gt;</td><td>Сделать исполняемым</td></tr>
+        <tr><td>chown &lt;u&gt;:&lt;g&gt; &lt;ф&gt;</td><td>Сменить владельца</td></tr>
+        <tr><td>sudo &lt;команда&gt;</td><td>От админа</td></tr>
+        <tr><td>su -</td><td>Войти как root</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 4: ПРОЦЕССЫ И ДИСКИ -->
+    <div class="card lin">
+      <h3>⚙️ Процессы и диски</h3>
+      <table>
+        <tr><td>ps aux</td><td>Все процессы</td></tr>
+        <tr><td>top / htop</td><td>Монитор процессов</td></tr>
+        <tr><td>kill &lt;PID&gt;</td><td>Завершить процесс</td></tr>
+        <tr><td>kill -9 &lt;PID&gt;</td><td>Принудительно</td></tr>
+        <tr><td>killall &lt;имя&gt;</td><td>По имени</td></tr>
+        <tr><td>df -h</td><td>Место на дисках</td></tr>
+        <tr><td>du -sh &lt;папка&gt;</td><td>Размер папки</td></tr>
+        <tr><td>free -h</td><td>Память</td></tr>
+        <tr><td>mount / umount</td><td>Монтирование</td></tr>
+        <tr><td>lsblk</td><td>Список дисков</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 5: СЕТЬ -->
+    <div class="card lin">
+      <h3>🌐 Сеть</h3>
+      <table>
+        <tr><td>ip a</td><td>IP интерфейсов</td></tr>
+        <tr><td>ip r</td><td>Маршруты</td></tr>
+        <tr><td>ip link</td><td>Состояние</td></tr>
+        <tr><td>ifconfig</td><td>Старый аналог ip a</td></tr>
+        <tr><td>ss -tulpn</td><td>Открытые порты</td></tr>
+        <tr><td>netstat -tulpn</td><td>Соединения</td></tr>
+        <tr><td>ping &lt;хост&gt;</td><td>Проверка связи</td></tr>
+        <tr><td>ping -c 4 &lt;хост&gt;</td><td>Ping 4 раза</td></tr>
+        <tr><td>traceroute &lt;хост&gt;</td><td>Трассировка</td></tr>
+        <tr><td>mtr &lt;хост&gt;</td><td>Трасса в реал. времени</td></tr>
+        <tr><td>dig &lt;домен&gt;</td><td>DNS-запрос</td></tr>
+        <tr><td>host &lt;домен&gt;</td><td>DNS кратко</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 6: СЕТЬ 2 -->
+    <div class="card lin">
+      <h3>🌐 Сеть (продолжение)</h3>
+      <table>
+        <tr><td>curl &lt;url&gt;</td><td>HTTP-запрос</td></tr>
+        <tr><td>curl -I &lt;url&gt;</td><td>Только заголовки</td></tr>
+        <tr><td>wget &lt;url&gt;</td><td>Скачать файл</td></tr>
+        <tr><td>ssh user@host</td><td>Подключение SSH</td></tr>
+        <tr><td>ssh-keygen</td><td>Генерация ключей</td></tr>
+        <tr><td>scp &lt;ф&gt; user@h:&lt;п&gt;</td><td>Копировать по SSH</td></tr>
+        <tr><td>rsync -avz</td><td>Синхронизация</td></tr>
+        <tr><td>nc -zv host port</td><td>Проверить порт</td></tr>
+        <tr><td>nmap &lt;хост&gt;</td><td>Сканирование портов</td></tr>
+        <tr><td>tcpdump -i any</td><td>Захват трафика</td></tr>
+        <tr><td>arp -a</td><td>ARP-таблица</td></tr>
+        <tr><td>ufw status</td><td>Статус файрвола</td></tr>
+        <tr><td>iptables -L</td><td>Правила файрвола</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 7: BASH -->
+    <div class="card lin">
+      <h3>⌨️ Bash — клавиши</h3>
+      <table>
+        <tr><td>Ctrl + L</td><td>Очистить терминал</td></tr>
+        <tr><td>Ctrl + D</td><td>Выйти / logout</td></tr>
+        <tr><td>Ctrl + A</td><td>В начало строки</td></tr>
+        <tr><td>Ctrl + E</td><td>В конец строки</td></tr>
+        <tr><td>Ctrl + U</td><td>Удалить до начала</td></tr>
+        <tr><td>Ctrl + K</td><td>Удалить до конца</td></tr>
+        <tr><td>Ctrl + W</td><td>Удалить слово</td></tr>
+        <tr><td>Ctrl + C</td><td>Прервать команду</td></tr>
+        <tr><td>Ctrl + Z</td><td>Приостановить</td></tr>
+        <tr><td>Ctrl + R</td><td>Поиск по истории</td></tr>
+        <tr><td>Tab</td><td>Автодополнение</td></tr>
+        <tr><td>↑ / ↓</td><td>История команд</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 8: ПОДСКАЗКИ -->
+    <div class="card lin">
+      <h3>💡 Подсказки</h3>
+      <table>
+        <tr><td>man &lt;команда&gt;</td><td>Документация</td></tr>
+        <tr><td>&lt;команда&gt; --help</td><td>Быстрая справка</td></tr>
+        <tr><td>|</td><td>Перенаправление в поток</td></tr>
+        <tr><td>&gt; / &gt;&gt;</td><td>В файл / в конец</td></tr>
+        <tr><td>&amp;&amp;</td><td>И (если успех)</td></tr>
+        <tr><td>||</td><td>ИЛИ</td></tr>
+        <tr><td>* / ?</td><td>Шаблоны имён</td></tr>
+      </table>
+      <div style="margin-top:2mm;font-size:6.5pt;color:#666;line-height:1.3;">
+        Дополнительные карточки можно создать по той же сетке — 8 шт. на лист A4.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

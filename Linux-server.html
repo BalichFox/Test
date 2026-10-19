@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Шпаргалка — Linux Server (карточки для блокнота)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    font-size: 7.5pt;
+    line-height: 1.22;
+    color: #111;
+    background: #dcdcdc;
+    padding: 8px;
+  }
+
+  .toolbar {
+    position: fixed; top: 10px; right: 10px; z-index: 100;
+    display: flex; gap: 8px;
+  }
+  .toolbar button {
+    padding: 8px 14px; font-size: 10pt; border: none; border-radius: 20px;
+    background: #2e7d32; color: #fff; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25); transition: transform .15s;
+  }
+  .toolbar button:hover { transform: scale(1.05); }
+
+  .sheet {
+    width: 210mm; height: 297mm;
+    margin: 0 auto 12px;
+    background: #fff;
+    padding: 6mm;
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+    page-break-after: always;
+    display: flex; flex-direction: column;
+  }
+  .sheet:last-of-type { page-break-after: auto; }
+
+  .sheet-header {
+    text-align: center;
+    font-size: 8pt;
+    color: #555;
+    margin-bottom: 3mm;
+    letter-spacing: .3px;
+  }
+  .sheet-header strong { color: #111; font-size: 9.5pt; }
+
+  .cards {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    gap: 3mm;
+  }
+
+  .card {
+    border: 1.2px dashed #888;
+    border-radius: 2px;
+    padding: 2mm 2.5mm 1.5mm;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    background: #fff;
+    position: relative;
+  }
+  .card::before {
+    content: "✂";
+    position: absolute;
+    top: -6px; left: 4px;
+    background: #fff;
+    padding: 0 2px;
+    font-size: 7pt;
+    color: #999;
+  }
+
+  .card h3 {
+    font-size: 8.5pt;
+    margin-bottom: 1.2mm;
+    padding-bottom: .8mm;
+    border-bottom: 1.3px solid;
+    display: flex; align-items: center; gap: 1.5mm;
+    white-space: nowrap;
+  }
+  .srv h3 { color: #2e7d32; border-color: #2e7d32; }
+  .sys h3 { color: #00695c; border-color: #00695c; }
+
+  .card table { width: 100%; border-collapse: collapse; }
+  .card td {
+    padding: .55mm .8mm;
+    border-bottom: 1px dotted #e2e2e2;
+    vertical-align: top;
+    font-size: 7pt;
+    line-height: 1.18;
+  }
+  .card tr:last-child td { border-bottom: none; }
+
+  .card td:first-child {
+    width: 48%;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 6.8pt;
+    font-weight: 700;
+    color: #1b5e20;
+  }
+  .sys td:first-child { color: #00695c; }
+  .card td:last-child { color: #222; }
+
+  @media print {
+    @page { size: A4; margin: 0; }
+    body { background: #fff; padding: 0; }
+    .toolbar { display: none !important; }
+    .sheet {
+      width: 210mm; height: 297mm;
+      margin: 0; padding: 6mm;
+      box-shadow: none;
+    }
+    .card { border-color: #555; }
+    .card::before { color: #555; }
+  }
+
+  @media screen and (max-width: 860px) {
+    .sheet { width: 100%; height: auto; padding: 10px; }
+    .cards { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .card { min-height: 80mm; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button onclick="window.print()">🖨 Печать</button>
+</div>
+
+<!-- ======================= СТРАНИЦА 1 — СИСТЕМА ======================= -->
+<div class="sheet">
+  <div class="sheet-header">
+    <strong>Linux Server</strong> · systemd · логи · пакеты · юзеры · сеть · firewall · карточки ✂
+  </div>
+
+  <div class="cards">
+
+    <!-- 1: SYSTEMD -->
+    <div class="card srv">
+      <h3>⚙️ systemd — службы</h3>
+      <table>
+        <tr><td>systemctl status &lt;unit&gt;</td><td>Статус службы</td></tr>
+        <tr><td>systemctl start / stop &lt;unit&gt;</td><td>Запуск / остановка</td></tr>
+        <tr><td>systemctl restart &lt;unit&gt;</td><td>Перезапуск</td></tr>
+        <tr><td>systemctl reload &lt;unit&gt;</td><td>Перечитать конфиг без рестарта</td></tr>
+        <tr><td>systemctl enable --now &lt;unit&gt;</td><td>Автостарт + запуск</td></tr>
+        <tr><td>systemctl disable &lt;unit&gt;</td><td>Убрать из автостарта</td></tr>
+        <tr><td>systemctl list-units --type=service</td><td>Все службы</td></tr>
+        <tr><td>systemctl list-units --failed</td><td>Упавшие юниты</td></tr>
+        <tr><td>systemctl list-unit-files --state=enabled</td><td>Включённые юниты</td></tr>
+        <tr><td>systemctl cat &lt;unit&gt;</td><td>Показать unit-файл</td></tr>
+        <tr><td>systemctl edit &lt;unit&gt;</td><td>Создать override</td></tr>
+        <tr><td>systemctl daemon-reload</td><td>Перечитать юниты</td></tr>
+        <tr><td>systemd-analyze blame</td><td>Время загрузки по юнитам</td></tr>
+      </table>
+    </div>
+
+    <!-- 2: JOURNALCTL -->
+    <div class="card srv">
+      <h3>📋 Логи — journalctl</h3>
+      <table>
+        <tr><td>journalctl -u &lt;unit&gt; -f</td><td>Логи службы в реальном времени</td></tr>
+        <tr><td>journalctl -u &lt;unit&gt; --since "1 hour ago"</td><td>Логи за период</td></tr>
+        <tr><td>journalctl -p err -b</td><td>Ошибки с момента загрузки</td></tr>
+        <tr><td>journalctl -xe</td><td>Последние + пояснения</td></tr>
+        <tr><td>journalctl -k</td><td>Только сообщения ядра</td></tr>
+        <tr><td>journalctl --disk-usage</td><td>Размер журнала</td></tr>
+        <tr><td>journalctl --vacuum-time=7d</td><td>Очистить старше 7 дней</td></tr>
+        <tr><td>tail -f /var/log/syslog</td><td>Системный лог (Debian)</td></tr>
+        <tr><td>tail -f /var/log/messages</td><td>Системный лог (RHEL)</td></tr>
+        <tr><td>dmesg -T | tail -30</td><td>Ядро с читаемым временем</td></tr>
+        <tr><td>logrotate -d /etc/logrotate.conf</td><td>Тест ротации (dry-run)</td></tr>
+      </table>
+    </div>
+
+    <!-- 3: ПАКЕТЫ -->
+    <div class="card srv">
+      <h3>📦 Пакеты — apt / dnf</h3>
+      <table>
+        <tr><td>apt update &amp;&amp; apt upgrade -y</td><td>Обновить (Debian/Ubuntu)</td></tr>
+        <tr><td>apt install / remove / purge &lt;pkg&gt;</td><td>Установка / удаление</td></tr>
+        <tr><td>apt search &lt;term&gt; / apt show &lt;pkg&gt;</td><td>Поиск / инфо о пакете</td></tr>
+        <tr><td>dpkg -l | grep &lt;pkg&gt;</td><td>Список установленных</td></tr>
+        <tr><td>dpkg -S &lt;файл&gt;</td><td>Какой пакет владеет файлом</td></tr>
+        <tr><td>apt-mark hold &lt;pkg&gt;</td><td>Заморозить версию</td></tr>
+        <tr><td>dnf install / remove / update &lt;pkg&gt;</td><td>RHEL / Fedora</td></tr>
+        <tr><td>dnf provides &lt;файл&gt;</td><td>Пакет-владелец файла</td></tr>
+        <tr><td>rpm -qa | grep &lt;pkg&gt;</td><td>Список пакетов (RPM)</td></tr>
+        <tr><td>zypper in / rm &lt;pkg&gt;</td><td>SUSE</td></tr>
+      </table>
+    </div>
+
+    <!-- 4: ПОЛЬЗОВАТЕЛИ -->
+    <div class="card srv">
+      <h3>👤 Пользователи и группы</h3>
+      <table>
+        <tr><td>useradd -m -s /bin/bash &lt;u&gt;</td><td>Создать пользователя</td></tr>
+        <tr><td>passwd &lt;u&gt;</td><td>Задать / сменить пароль</td></tr>
+        <tr><td>usermod -aG sudo &lt;u&gt;</td><td>Добавить в группу (Debian)</td></tr>
+        <tr><td>usermod -aG wheel &lt;u&gt;</td><td>Добавить в группу (RHEL)</td></tr>
+        <tr><td>userdel -r &lt;u&gt;</td><td>Удалить с домашним каталогом</td></tr>
+        <tr><td>groupadd / groupdel &lt;g&gt;</td><td>Создать / удалить группу</td></tr>
+        <tr><td>id &lt;u&gt; / groups &lt;u&gt;</td><td>UID, GID и группы</td></tr>
+        <tr><td>getent passwd &lt;u&gt;</td><td>Запись из passwd / NSS</td></tr>
+        <tr><td>chage -l &lt;u&gt;</td><td>Политика пароля</td></tr>
+        <tr><td>last / lastb</td><td>Входы / неудачные входы</td></tr>
+      </table>
+    </div>
+
+    <!-- 5: SUDO И ПРАВА -->
+    <div class="card srv">
+      <h3>🔐 sudo и права</h3>
+      <table>
+        <tr><td>visudo</td><td>Безопасно править sudoers</td></tr>
+        <tr><td>/etc/sudoers.d/&lt;file&gt;</td><td>Отдельные правила</td></tr>
+        <tr><td>sudo -l</td><td>Что разрешено текущему юзеру</td></tr>
+        <tr><td>sudo -u &lt;user&gt; &lt;cmd&gt;</td><td>Выполнить от другого юзера</td></tr>
+        <tr><td>chmod 750 &lt;файл&gt;</td><td>Сменить права</td></tr>
+        <tr><td>chown user:group &lt;файл&gt;</td><td>Сменить владельца</td></tr>
+        <tr><td>umask 022</td><td>Маска прав по умолчанию</td></tr>
+        <tr><td>getfacl / setfacl -m u:x:rw</td><td>ACL на файл</td></tr>
+        <tr><td>chattr +i &lt;файл&gt;</td><td>Запретить изменение файла</td></tr>
+        <tr><td>lsattr &lt;файл&gt;</td><td>Показать атрибуты</td></tr>
+      </table>
+    </div>
+
+    <!-- 6: СЕТЬ ДИАГНОСТИКА -->
+    <div class="card srv">
+      <h3>🌐 Сеть — диагностика</h3>
+      <table>
+        <tr><td>ip a / ip r / ip link</td><td>Адреса / маршруты / интерфейсы</td></tr>
+        <tr><td>ss -tulpn</td><td>Слушающие порты + процессы</td></tr>
+        <tr><td>ss -tnp state established</td><td>Активные соединения</td></tr>
+        <tr><td>ping -c 4 &lt;хост&gt;</td><td>Проверка связи</td></tr>
+        <tr><td>traceroute / mtr &lt;хост&gt;</td><td>Трассировка</td></tr>
+        <tr><td>dig +short &lt;домен&gt;</td><td>DNS-запрос</td></tr>
+        <tr><td>resolvectl status</td><td>Текущие DNS-серверы</td></tr>
+        <tr><td>curl -I &lt;url&gt; / curl -v</td><td>HTTP-заголовки / подробно</td></tr>
+        <tr><td>nc -zv host 443</td><td>Проверить доступность порта</td></tr>
+        <tr><td>tcpdump -i any port 443</td><td>Захват трафика</td></tr>
+        <tr><td>nmap -p- &lt;хост&gt;</td><td>Сканирование портов</td></tr>
+        <tr><td>ifconfig / netstat</td><td>Устарели, могут не стоять</td></tr>
+      </table>
+    </div>
+
+    <!-- 7: СЕТЬ НАСТРОЙКА -->
+    <div class="card sys">
+      <h3>🔧 Сеть — настройка</h3>
+      <table>
+        <tr><td>netplan try / netplan apply</td><td>Применить конфиг (Ubuntu)</td></tr>
+        <tr><td>/etc/netplan/*.yaml</td><td>Конфиг сети (Ubuntu)</td></tr>
+        <tr><td>nmcli con show</td><td>Соединения NetworkManager</td></tr>
+        <tr><td>nmcli dev status</td><td>Статус устройств</td></tr>
+        <tr><td>nmtui</td><td>Меню настройки сети (RHEL)</td></tr>
+        <tr><td>hostnamectl set-hostname &lt;имя&gt;</td><td>Имя сервера</td></tr>
+        <tr><td>timedatectl set-timezone &lt;зона&gt;</td><td>Часовой пояс</td></tr>
+        <tr><td>timedatectl set-ntp true</td><td>Включить синхронизацию</td></tr>
+        <tr><td>chronyc sources -v</td><td>Источники времени</td></tr>
+        <tr><td>ip route add / del</td><td>Добавить / убрать маршрут</td></tr>
+        <tr><td>/etc/hosts</td><td>Локальные имена</td></tr>
+      </table>
+    </div>
+
+    <!-- 8: FIREWALL -->
+    <div class="card sys">
+      <h3>🛡️ Firewall</h3>
+      <table>
+        <tr><td>ufw status verbose</td><td>Статус (Ubuntu)</td></tr>
+        <tr><td>ufw allow 22/tcp</td><td>Открыть порт</td></tr>
+        <tr><td>ufw enable / disable</td><td>Включить / выключить</td></tr>
+        <tr><td>firewall-cmd --state</td><td>Статус (RHEL)</td></tr>
+        <tr><td>firewall-cmd --list-all</td><td>Текущие правила</td></tr>
+        <tr><td>firewall-cmd --add-service=https --permanent</td><td>Разрешить сервис</td></tr>
+        <tr><td>firewall-cmd --add-port=8080/tcp --permanent</td><td>Разрешить порт</td></tr>
+        <tr><td>firewall-cmd --reload</td><td>Применить правила</td></tr>
+        <tr><td>nft list ruleset</td><td>Правила nftables</td></tr>
+        <tr><td>iptables -L -n -v</td><td>Правила iptables</td></tr>
+        <tr><td>iptables-save &gt; rules.bak</td><td>Сохранить правила</td></tr>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ======================= СТРАНИЦА 2 — ЭКСПЛУАТАЦИЯ ======================= -->
+<div class="sheet">
+  <div class="sheet-header">
+    <strong>Linux Server</strong> · SSH · LVM · мониторинг · SELinux · cron · веб · контейнеры · карточки ✂
+  </div>
+
+  <div class="cards">
+
+    <!-- 1: SSH -->
+    <div class="card srv">
+      <h3>🔑 SSH и харденинг</h3>
+      <table>
+        <tr><td>ssh user@host -p 2222</td><td>Подключение на нестандартный порт</td></tr>
+        <tr><td>ssh-keygen -t ed25519 -C "comment"</td><td>Создать ключ</td></tr>
+        <tr><td>ssh-copy-id user@host</td><td>Скопировать ключ на сервер</td></tr>
+        <tr><td>~/.ssh/config</td><td>Алиасы и параметры хостов</td></tr>
+        <tr><td>sshd -t</td><td>Проверить sshd_config</td></tr>
+        <tr><td>PermitRootLogin no</td><td>Запрет входа root</td></tr>
+        <tr><td>PasswordAuthentication no</td><td>Только по ключам</td></tr>
+        <tr><td>systemctl restart sshd</td><td>Применить конфиг</td></tr>
+        <tr><td>ssh -L 8080:localhost:80 host</td><td>Локальный туннель</td></tr>
+        <tr><td>rsync -avz --progress src/ user@h:/dst</td><td>Синхронизация по SSH</td></tr>
+        <tr><td>ssh-add / ssh-agent</td><td>Кэшировать ключи</td></tr>
+      </table>
+    </div>
+
+    <!-- 2: ХРАНИЛИЩЕ -->
+    <div class="card srv">
+      <h3>💾 Диски и LVM</h3>
+      <table>
+        <tr><td>lsblk -f / blkid</td><td>Диски, ФС, UUID</td></tr>
+        <tr><td>df -h / du -sh *</td><td>Занятое место</td></tr>
+        <tr><td>mkfs.ext4 / mkfs.xfs &lt;dev&gt;</td><td>Создать ФС</td></tr>
+        <tr><td>mount / umount &lt;dev&gt; &lt;dir&gt;</td><td>Монтирование</td></tr>
+        <tr><td>mount -a</td><td>Смонтировать всё из fstab</td></tr>
+        <tr><td>/etc/fstab</td><td>UUID=... /mnt ext4 defaults 0 2</td></tr>
+        <tr><td>pvcreate / vgcreate vg0 /dev/sdb</td><td>Создать PV и VG</td></tr>
+        <tr><td>lvcreate -L 10G -n lv0 vg0</td><td>Создать LV</td></tr>
+        <tr><td>lvextend -r -l +100%FREE /dev/vg0/lv0</td><td>Расширить и сразу расширить ФС</td></tr>
+        <tr><td>pvs / vgs / lvs</td><td>Показать PV / VG / LV</td></tr>
+        <tr><td>smartctl -a /dev/sda</td><td>S.M.A.R.T. диска</td></tr>
+      </table>
+    </div>
+
+    <!-- 3: МОНИТОРИНГ -->
+    <div class="card srv">
+      <h3>📊 Мониторинг и нагрузка</h3>
+      <table>
+        <tr><td>top / htop / atop</td><td>Процессы в реальном времени</td></tr>
+        <tr><td>free -h</td><td>Оперативная память</td></tr>
+        <tr><td>uptime / w</td><td>Load average и кто вошёл</td></tr>
+        <tr><td>vmstat 1</td><td>Память, swap, CPU, I/O</td></tr>
+        <tr><td>iostat -x 1</td><td>Нагрузка на диски</td></tr>
+        <tr><td>iotop -o</td><td>Кто грузит диск</td></tr>
+        <tr><td>sar -u 1 5</td><td>История CPU (sysstat)</td></tr>
+        <tr><td>ps aux --sort=-%mem | head</td><td>Топ по памяти</td></tr>
+        <tr><td>lsof -i :80</td><td>Кто держит порт</td></tr>
+        <tr><td>systemd-cgtop</td><td>Нагрузка по юнитам</td></tr>
+        <tr><td>dstat / nload / iftop</td><td>I/O и сеть</td></tr>
+      </table>
+    </div>
+
+    <!-- 4: БЕЗОПАСНОСТЬ -->
+    <div class="card srv">
+      <h3>🛡️ SELinux / AppArmor / fail2ban</h3>
+      <table>
+        <tr><td>getenforce / setenforce 0</td><td>Режим SELinux</td></tr>
+        <tr><td>sestatus</td><td>Подробный статус SELinux</td></tr>
+        <tr><td>semanage fcontext -a -t &lt;ctx&gt; &lt;path&gt;</td><td>Задать контекст</td></tr>
+        <tr><td>restorecon -Rv &lt;path&gt;</td><td>Применить контексты</td></tr>
+        <tr><td>ausearch -m avc -ts recent</td><td>Отказы SELinux</td></tr>
+        <tr><td>aa-status</td><td>Статус AppArmor (Ubuntu)</td></tr>
+        <tr><td>fail2ban-client status sshd</td><td>Забаненные IP</td></tr>
+        <tr><td>/etc/fail2ban/jail.local</td><td>Конфиг защиты</td></tr>
+        <tr><td>grep -c "Failed password" /var/log/auth.log</td><td>Попытки подбора</td></tr>
+        <tr><td>rkhunter --check / chkrootkit</td><td>Поиск руткитов</td></tr>
+      </table>
+    </div>
+
+    <!-- 5: CRON -->
+    <div class="card srv">
+      <h3>⏰ Cron и таймеры</h3>
+      <table>
+        <tr><td>crontab -e / crontab -l</td><td>Редактировать / показать задания</td></tr>
+        <tr><td>crontab -u &lt;user&gt; -l</td><td>Задания другого юзера</td></tr>
+        <tr><td>* * * * * cmd</td><td>мин час день мес день.нед</td></tr>
+        <tr><td>@reboot / @daily / @weekly</td><td>Сокращённые расписания</td></tr>
+        <tr><td>/etc/cron.d/ /etc/cron.daily/</td><td>Системные задания</td></tr>
+        <tr><td>systemctl list-timers --all</td><td>Все systemd-таймеры</td></tr>
+        <tr><td>systemctl enable --now &lt;name&gt;.timer</td><td>Включить таймер</td></tr>
+        <tr><td>at now + 1 hour</td><td>Разовое задание</td></tr>
+        <tr><td>atq / atrm &lt;id&gt;</td><td>Список / удалить at-задание</td></tr>
+      </table>
+    </div>
+
+    <!-- 6: ВЕБ И БД -->
+    <div class="card srv">
+      <h3>🌍 Веб-сервер и БД</h3>
+      <table>
+        <tr><td>nginx -t</td><td>Проверить конфиг nginx</td></tr>
+        <tr><td>systemctl reload nginx</td><td>Применить без простоя</td></tr>
+        <tr><td>/etc/nginx/sites-enabled/</td><td>Включённые сайты</td></tr>
+        <tr><td>apachectl configtest</td><td>Проверить конфиг Apache</td></tr>
+        <tr><td>apache2ctl -S</td><td>Виртуальные хосты</td></tr>
+        <tr><td>tail -f /var/log/nginx/error.log</td><td>Ошибки веб-сервера</td></tr>
+        <tr><td>mysql -u root -p</td><td>Войти в MySQL/MariaDB</td></tr>
+        <tr><td>mysqldump -u root -p db &gt; db.sql</td><td>Дамп базы</td></tr>
+        <tr><td>psql -U postgres</td><td>Войти в PostgreSQL</td></tr>
+        <tr><td>pg_dump db &gt; db.sql</td><td>Дамп базы</td></tr>
+      </table>
+    </div>
+
+    <!-- 7: КОНТЕЙНЕРЫ -->
+    <div class="card srv">
+      <h3>🐳 Контейнеры</h3>
+      <table>
+        <tr><td>docker ps -a / docker images</td><td>Контейнеры / образы</td></tr>
+        <tr><td>docker run -d --name x -p 80:80 nginx</td><td>Запустить контейнер</td></tr>
+        <tr><td>docker logs -f &lt;c&gt;</td><td>Логи контейнера</td></tr>
+        <tr><td>docker exec -it &lt;c&gt; bash</td><td>Войти внутрь</td></tr>
+        <tr><td>docker stats</td><td>Потребление ресурсов</td></tr>
+        <tr><td>docker inspect &lt;c&gt;</td><td>Полная информация</td></tr>
+        <tr><td>docker compose up -d / down</td><td>Поднять / остановить стек</td></tr>
+        <tr><td>docker compose logs -f</td><td>Логи стека</td></tr>
+        <tr><td>podman ps / podman run</td><td>Rootless-аналог</td></tr>
+        <tr><td>systemctl status docker</td><td>Служба Docker</td></tr>
+      </table>
+    </div>
+
+    <!-- 8: ЯДРО И ПОДСКАЗКИ -->
+    <div class="card srv">
+      <h3>🧩 Ядро и подсказки</h3>
+      <table>
+        <tr><td>uname -r / uname -a</td><td>Версия ядра</td></tr>
+        <tr><td>sysctl -a | grep net.ipv4</td><td>Параметры ядра</td></tr>
+        <tr><td>sysctl -w net.ipv4.ip_forward=1</td><td>Изменить на лету</td></tr>
+        <tr><td>/etc/sysctl.d/99-custom.conf</td><td>Постоянные параметры</td></tr>
+        <tr><td>sysctl --system</td><td>Применить все sysctl</td></tr>
+        <tr><td>ulimit -a / ulimit -n 65535</td><td>Лимиты ресурсов</td></tr>
+        <tr><td>/etc/security/limits.conf</td><td>Постоянные лимиты</td></tr>
+        <tr><td>lsmod / modprobe &lt;mod&gt;</td><td>Модули ядра</td></tr>
+        <tr><td>dmesg | grep -i error</td><td>Ошибки ядра</td></tr>
+        <tr><td>man &lt;cmd&gt; / &lt;cmd&gt; --help</td><td>Справка</td></tr>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

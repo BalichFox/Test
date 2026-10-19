@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Шпаргалка — Git (карточки для блокнота)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    font-size: 7.5pt;
+    line-height: 1.22;
+    color: #111;
+    background: #dcdcdc;
+    padding: 8px;
+  }
+
+  .toolbar {
+    position: fixed; top: 10px; right: 10px; z-index: 100;
+    display: flex; gap: 8px;
+  }
+  .toolbar button {
+    padding: 8px 14px; font-size: 10pt; border: none; border-radius: 20px;
+    background: #f05033; color: #fff; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25); transition: transform .15s;
+  }
+  .toolbar button:hover { transform: scale(1.05); }
+
+  .sheet {
+    width: 210mm; height: 297mm;
+    margin: 0 auto 12px;
+    background: #fff;
+    padding: 6mm;
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+    page-break-after: always;
+    display: flex; flex-direction: column;
+  }
+  .sheet:last-of-type { page-break-after: auto; }
+
+  .sheet-header {
+    text-align: center;
+    font-size: 8pt;
+    color: #555;
+    margin-bottom: 3mm;
+    letter-spacing: .3px;
+  }
+  .sheet-header strong { color: #111; font-size: 9.5pt; }
+
+  .cards {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    gap: 3mm;
+  }
+
+  .card {
+    border: 1.2px dashed #888;
+    border-radius: 2px;
+    padding: 2mm 2.5mm 1.5mm;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    background: #fff;
+    position: relative;
+  }
+  .card::before {
+    content: "✂";
+    position: absolute;
+    top: -6px; left: 4px;
+    background: #fff;
+    padding: 0 2px;
+    font-size: 7pt;
+    color: #999;
+  }
+
+  .card h3 {
+    font-size: 8.5pt;
+    margin-bottom: 1.2mm;
+    padding-bottom: .8mm;
+    border-bottom: 1.3px solid;
+    display: flex; align-items: center; gap: 1.5mm;
+    white-space: nowrap;
+  }
+  .git h3 { color: #f05033; border-color: #f05033; }
+
+  .card table { width: 100%; border-collapse: collapse; }
+  .card td {
+    padding: .55mm .8mm;
+    border-bottom: 1px dotted #e2e2e2;
+    vertical-align: top;
+    font-size: 7pt;
+    line-height: 1.18;
+  }
+  .card tr:last-child td { border-bottom: none; }
+
+  .card td:first-child {
+    width: 47%;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 6.8pt;
+    font-weight: 700;
+    color: #c43a1a;
+  }
+  .card td:last-child { color: #222; }
+
+  @media print {
+    @page { size: A4; margin: 0; }
+    body { background: #fff; padding: 0; }
+    .toolbar { display: none !important; }
+    .sheet {
+      width: 210mm; height: 297mm;
+      margin: 0; padding: 6mm;
+      box-shadow: none;
+    }
+    .card { border-color: #555; }
+    .card::before { color: #555; }
+  }
+
+  @media screen and (max-width: 860px) {
+    .sheet { width: 100%; height: auto; padding: 10px; }
+    .cards { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .card { min-height: 80mm; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button onclick="window.print()">🖨 Печать</button>
+</div>
+
+<!-- ======================= СТРАНИЦА 1 — ОСНОВЫ ======================= -->
+<div class="sheet">
+  <div class="sheet-header">
+    <strong>Git</strong> · карточки для блокнота · вырезать по пунктиру ✂
+  </div>
+
+  <div class="cards">
+
+    <!-- КАРТОЧКА 1: НАСТРОЙКА И СОЗДАНИЕ РЕПОЗИТОРИЯ -->
+    <div class="card git">
+      <h3>⚙️ Настройка и старт</h3>
+      <table>
+        <tr><td>git config --global user.name "Имя"</td><td>Установить имя</td></tr>
+        <tr><td>git config --global user.email "email"</td><td>Установить email</td></tr>
+        <tr><td>git config --list</td><td>Показать все настройки</td></tr>
+        <tr><td>git config --global core.editor "code --wait"</td><td>Редактор по умолчанию</td></tr>
+        <tr><td>git init</td><td>Новый локальный репозиторий</td></tr>
+        <tr><td>git clone &lt;url&gt;</td><td>Клонировать удалённый репозиторий</td></tr>
+        <tr><td>git remote add origin &lt;url&gt;</td><td>Добавить удалённый репозиторий</td></tr>
+        <tr><td>git remote -v</td><td>Список удалённых репозиториев</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 2: ЕЖЕДНЕВНЫЕ КОМАНДЫ -->
+    <div class="card git">
+      <h3>📝 Ежедневные команды</h3>
+      <table>
+        <tr><td>git status</td><td>Статус рабочей директории</td></tr>
+        <tr><td>git add &lt;файл&gt;</td><td>Добавить файл в индекс</td></tr>
+        <tr><td>git add .</td><td>Добавить все изменения</td></tr>
+        <tr><td>git add -p</td><td>Интерактивное добавление</td></tr>
+        <tr><td>git commit -m "сообщение"</td><td>Зафиксировать изменения</td></tr>
+        <tr><td>git commit -am "сообщение"</td><td>Добавить и зафиксировать (для отслеживаемых)</td></tr>
+        <tr><td>git commit --amend</td><td>Исправить последний коммит</td></tr>
+        <tr><td>git diff</td><td>Разница между рабочей директорией и индексом</td></tr>
+        <tr><td>git diff --staged</td><td>Разница между индексом и последним коммитом</td></tr>
+        <tr><td>git diff HEAD</td><td>Все изменения (индексированные и нет)</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 3: ИСТОРИЯ -->
+    <div class="card git">
+      <h3>📜 История</h3>
+      <table>
+        <tr><td>git log</td><td>Полная история коммитов</td></tr>
+        <tr><td>git log --oneline</td><td>Краткая история (одна строка на коммит)</td></tr>
+        <tr><td>git log --graph --all --oneline</td><td>Графическая история всех веток</td></tr>
+        <tr><td>git log -p &lt;файл&gt;</td><td>История изменений файла с диффами</td></tr>
+        <tr><td>git log --follow &lt;файл&gt;</td><td>История файла, включая переименования</td></tr>
+        <tr><td>git show &lt;commit&gt;</td><td>Показать изменения в коммите</td></tr>
+        <tr><td>git blame &lt;файл&gt;</td><td>Кто и когда менял каждую строку</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 4: ВЕТКИ -->
+    <div class="card git">
+      <h3>🌿 Ветки</h3>
+      <table>
+        <tr><td>git branch</td><td>Список локальных веток</td></tr>
+        <tr><td>git branch -a</td><td>Список всех веток (локальных и удалённых)</td></tr>
+        <tr><td>git branch &lt;имя&gt;</td><td>Создать ветку</td></tr>
+        <tr><td>git switch &lt;ветка&gt;</td><td>Переключиться на ветку (новый способ)</td></tr>
+        <tr><td>git checkout &lt;ветка&gt;</td><td>Переключиться на ветку (старый способ)</td></tr>
+        <tr><td>git switch -c &lt;новая&gt;</td><td>Создать и переключиться</td></tr>
+        <tr><td>git checkout -b &lt;новая&gt;</td><td>Создать и переключиться (старый способ)</td></tr>
+        <tr><td>git merge &lt;ветка&gt;</td><td>Слить ветку в текущую</td></tr>
+        <tr><td>git branch -d &lt;ветка&gt;</td><td>Удалить ветку (если слита)</td></tr>
+        <tr><td>git branch -D &lt;ветка&gt;</td><td>Принудительно удалить ветку</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 5: УДАЛЁННЫЕ РЕПОЗИТОРИИ -->
+    <div class="card git">
+      <h3>☁️ Удалённые репозитории</h3>
+      <table>
+        <tr><td>git fetch</td><td>Получить изменения без слияния</td></tr>
+        <tr><td>git pull</td><td>Получить и слить изменения</td></tr>
+        <tr><td>git push</td><td>Отправить изменения</td></tr>
+        <tr><td>git push -u origin &lt;ветка&gt;</td><td>Отправить и связать с удалённой</td></tr>
+        <tr><td>git push origin --delete &lt;ветка&gt;</td><td>Удалить удалённую ветку</td></tr>
+        <tr><td>git remote set-url origin &lt;новый_url&gt;</td><td>Изменить URL удалённого репозитория</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 6: ОТМЕНА ИЗМЕНЕНИЙ -->
+    <div class="card git">
+      <h3>↩️ Отмена изменений</h3>
+      <table>
+        <tr><td>git restore &lt;файл&gt;</td><td>Отменить изменения в рабочей директории</td></tr>
+        <tr><td>git restore --staged &lt;файл&gt;</td><td>Убрать файл из индекса</td></tr>
+        <tr><td>git reset &lt;файл&gt;</td><td>Убрать файл из индекса (старый способ)</td></tr>
+        <tr><td>git reset --hard</td><td>Сбросить всё к последнему коммиту (ОПАСНО)</td></tr>
+        <tr><td>git reset HEAD^</td><td>Отменить последний коммит, сохранив изменения</td></tr>
+        <tr><td>git clean</td><td>Удалить неотслеживаемые файлы</td></tr>
+        <tr><td>git revert &lt;commit&gt;</td><td>Создать коммит, отменяющий указанный</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 7: STASH -->
+    <div class="card git">
+      <h3>📦 Stash (временное сохранение)</h3>
+      <table>
+        <tr><td>git stash</td><td>Спрятать текущие изменения</td></tr>
+        <tr><td>git stash push -m "сообщение"</td><td>Спрятать с описанием</td></tr>
+        <tr><td>git stash list</td><td>Список спрятанных изменений</td></tr>
+        <tr><td>git stash pop</td><td>Применить и удалить последний stash</td></tr>
+        <tr><td>git stash apply</td><td>Применить, но оставить в списке</td></tr>
+        <tr><td>git stash drop</td><td>Удалить последний stash</td></tr>
+        <tr><td>git stash clear</td><td>Очистить все stash</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 8: REBASE И CHERRY-PICK -->
+    <div class="card git">
+      <h3>🔀 Rebase и Cherry-pick</h3>
+      <table>
+        <tr><td>git rebase &lt;ветка&gt;</td><td>Перебазировать текущую ветку на другую</td></tr>
+        <tr><td>git rebase -i HEAD~5</td><td>Интерактивный rebase последних 5 коммитов</td></tr>
+        <tr><td>git rebase --continue</td><td>Продолжить после разрешения конфликтов</td></tr>
+        <tr><td>git rebase --abort</td><td>Прервать rebase</td></tr>
+        <tr><td>git cherry-pick &lt;commit&gt;</td><td>Применить указанный коммит в текущую ветку</td></tr>
+        <tr><td>git reflog</td><td>История всех действий (спасательный круг)</td></tr>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ======================= СТРАНИЦА 2 — ПРОДВИНУТОЕ И ПОДСКАЗКИ ======================= -->
+<div class="sheet">
+  <div class="sheet-header">
+    <strong>Git</strong> · Продвинутые техники и подсказки · карточки ✂
+  </div>
+
+  <div class="cards">
+
+    <!-- КАРТОЧКА 1: ТЕГИ -->
+    <div class="card git">
+      <h3>🏷️ Теги</h3>
+      <table>
+        <tr><td>git tag</td><td>Список тегов</td></tr>
+        <tr><td>git tag v1.0.0</td><td>Создать легковесный тег</td></tr>
+        <tr><td>git tag -a v1.0.0 -m "Release"</td><td>Создать аннотированный тег</td></tr>
+        <tr><td>git show v1.0.0</td><td>Информация о теге</td></tr>
+        <tr><td>git push origin v1.0.0</td><td>Отправить тег на удалённый</td></tr>
+        <tr><td>git push origin --tags</td><td>Отправить все теги</td></tr>
+        <tr><td>git tag -d v1.0.0</td><td>Удалить локальный тег</td></tr>
+        <tr><td>git push origin --delete v1.0.0</td><td>Удалить удалённый тег</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 2: SUBMODULES -->
+    <div class="card git">
+      <h3>📦 Submodules</h3>
+      <table>
+        <tr><td>git submodule add &lt;url&gt;</td><td>Добавить подмодуль</td></tr>
+        <tr><td>git submodule init</td><td>Инициализировать подмодули</td></tr>
+        <tr><td>git submodule update</td><td>Обновить подмодули</td></tr>
+        <tr><td>git submodule update --init --recursive</td><td>Клонировать с подмодулями</td></tr>
+        <tr><td>git submodule status</td><td>Статус подмодулей</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 3: АЛИАСЫ -->
+    <div class="card git">
+      <h3>⚡ Полезные алиасы</h3>
+      <table>
+        <tr><td>git config --global alias.st status</td><td>git st = status</td></tr>
+        <tr><td>git config --global alias.co checkout</td><td>git co = checkout</td></tr>
+        <tr><td>git config --global alias.br branch</td><td>git br = branch</td></tr>
+        <tr><td>git config --global alias.ci commit</td><td>git ci = commit</td></tr>
+        <tr><td>git config --global alias.lg "log --oneline --graph --all"</td><td>git lg = красивая история</td></tr>
+        <tr><td>git config --global alias.unstage "reset HEAD --"</td><td>git unstage = убрать из индекса</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 4: ПОИСК -->
+    <div class="card git">
+      <h3>🔍 Поиск</h3>
+      <table>
+        <tr><td>git grep "текст"</td><td>Поиск по содержимому файлов</td></tr>
+        <tr><td>git grep -n "текст"</td><td>Поиск с номерами строк</td></tr>
+        <tr><td>git log -S "текст"</td><td>Коммиты, где текст был добавлен/удалён</td></tr>
+        <tr><td>git log -G "regex"</td><td>Коммиты с изменениями по regex</td></tr>
+        <tr><td>git log --author="Имя"</td><td>Коммиты автора</td></tr>
+        <tr><td>git log --since="2026-01-01" --until="2026-12-31"</td><td>Коммиты за период</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 5: BISECT -->
+    <div class="card git">
+      <h3>🐛 Bisect (поиск бага)</h3>
+      <table>
+        <tr><td>git bisect start</td><td>Начать поиск</td></tr>
+        <tr><td>git bisect bad</td><td>Текущий коммит с багом</td></tr>
+        <tr><td>git bisect good &lt;commit&gt;</td><td>Последний хороший коммит</td></tr>
+        <tr><td>git bisect good / bad</td><td>Отмечать коммиты при поиске</td></tr>
+        <tr><td>git bisect reset</td><td>Завершить поиск</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 6: WORKTREE -->
+    <div class="card git">
+      <h3>🌳 Worktree</h3>
+      <table>
+        <tr><td>git worktree add ../dir branch</td><td>Создать рабочую копию для ветки</td></tr>
+        <tr><td>git worktree list</td><td>Список worktree</td></tr>
+        <tr><td>git worktree remove ../dir</td><td>Удалить worktree</td></tr>
+        <tr><td>git worktree prune</td><td>Очистить неактуальные</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 7: ПОДСКАЗКИ -->
+    <div class="card git">
+      <h3>💡 Подсказки</h3>
+      <table>
+        <tr><td>Tab</td><td>Автодополнение команд и веток</td></tr>
+        <tr><td>↑ / ↓</td><td>История команд</td></tr>
+        <tr><td>Ctrl + R</td><td>Поиск по истории</td></tr>
+        <tr><td>HEAD</td><td>Текущий коммит</td></tr>
+        <tr><td>HEAD~1</td><td>Один коммит назад</td></tr>
+        <tr><td>HEAD^2</td><td>Второй родитель (для merge)</td></tr>
+        <tr><td>origin/main</td><td>Удалённая ветка main</td></tr>
+      </table>
+    </div>
+
+    <!-- КАРТОЧКА 8: ШПАРГАЛКА ПО ПЕЧАТИ -->
+    <div class="card git">
+      <h3>🖨️ Печать и сборка</h3>
+      <table>
+        <tr><td>Ctrl + P</td><td>Печать</td></tr>
+        <tr><td>A4</td><td>Формат бумаги</td></tr>
+        <tr><td>Поля 0</td><td>Или «минимальные»</td></tr>
+        <tr><td>Масштаб</td><td>100% / «Реальный»</td></tr>
+        <tr><td>Фон</td><td>Включить графику</td></tr>
+        <tr><td>✂</td><td>Резать по пунктиру</td></tr>
+        <tr><td>Клей</td><td>ПВА или клей-карандаш</td></tr>
+        <tr><td>Блокнот</td><td>Карточки = разделы</td></tr>
+      </table>
+      <div style="margin-top:2mm;font-size:6.5pt;color:#666;line-height:1.3;">
+        Каждая карточка — отдельная тема. Вырежьте и вклейте в нужный раздел блокнота.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

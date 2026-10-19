@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Шпаргалка — Сетевой инженер (карточки для блокнота)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    font-size: 7.5pt;
+    line-height: 1.22;
+    color: #111;
+    background: #dcdcdc;
+    padding: 8px;
+  }
+
+  .toolbar {
+    position: fixed; top: 10px; right: 10px; z-index: 100;
+    display: flex; gap: 8px;
+  }
+  .toolbar button {
+    padding: 8px 14px; font-size: 10pt; border: none; border-radius: 20px;
+    background: #00838f; color: #fff; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25); transition: transform .15s;
+  }
+  .toolbar button:hover { transform: scale(1.05); }
+
+  .sheet {
+    width: 210mm; height: 297mm;
+    margin: 0 auto 12px;
+    background: #fff;
+    padding: 6mm;
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+    page-break-after: always;
+    display: flex; flex-direction: column;
+  }
+  .sheet:last-of-type { page-break-after: auto; }
+
+  .sheet-header {
+    text-align: center;
+    font-size: 8pt;
+    color: #555;
+    margin-bottom: 3mm;
+    letter-spacing: .3px;
+  }
+  .sheet-header strong { color: #111; font-size: 9.5pt; }
+
+  .cards {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    gap: 3mm;
+  }
+
+  .card {
+    border: 1.2px dashed #888;
+    border-radius: 2px;
+    padding: 2mm 2.5mm 1.5mm;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    background: #fff;
+    position: relative;
+  }
+  .card::before {
+    content: "✂";
+    position: absolute;
+    top: -6px; left: 4px;
+    background: #fff;
+    padding: 0 2px;
+    font-size: 7pt;
+    color: #999;
+  }
+
+  .card h3 {
+    font-size: 8.5pt;
+    margin-bottom: 1.2mm;
+    padding-bottom: .8mm;
+    border-bottom: 1.3px solid;
+    display: flex; align-items: center; gap: 1.5mm;
+    white-space: nowrap;
+  }
+  .l2 h3 { color: #00838f; border-color: #00838f; }
+  .l3 h3 { color: #e65100; border-color: #e65100; }
+  .svc h3 { color: #5e35b1; border-color: #5e35b1; }
+  .tool h3 { color: #6a1a8a; border-color: #6a1a8a; }
+
+  .card table { width: 100%; border-collapse: collapse; }
+  .card td {
+    padding: .55mm .8mm;
+    border-bottom: 1px dotted #e2e2e2;
+    vertical-align: top;
+    font-size: 7pt;
+    line-height: 1.18;
+  }
+  .card tr:last-child td { border-bottom: none; }
+
+  .card td:first-child {
+    width: 48%;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 6.8pt;
+    font-weight: 700;
+  }
+  .l2 td:first-child { color: #006064; }
+  .l3 td:first-child { color: #bf360c; }
+  .svc td:first-child { color: #4527a0; }
+  .tool td:first-child { color: #4a148c; }
+  .card td:last-child { color: #222; }
+
+  @media print {
+    @page { size: A4; margin: 0; }
+    body { background: #fff; padding: 0; }
+    .toolbar { display: none !important; }
+    .sheet {
+      width: 210mm; height: 297mm;
+      margin: 0; padding: 6mm;
+      box-shadow: none;
+    }
+    .card { border-color: #555; }
+    .card::before { color: #555; }
+  }
+
+  @media screen and (max-width: 860px) {
+    .sheet { width: 100%; height: auto; padding: 10px; }
+    .cards { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .card { min-height: 80mm; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button onclick="window.print()">🖨 Печать</button>
+</div>
+
+<!-- ======================= СТРАНИЦА 1 — КОММУТАЦИЯ (L2) ======================= -->
+<div class="sheet">
+  <div class="sheet-header">
+    <strong>Сетевой инженер — часть 1</strong> · Коммутация · VLAN · STP · Wi-Fi · карточки ✂
+  </div>
+
+  <div class="cards">
+
+    <!-- 1: VLAN 802.1Q -->
+    <div class="card l2">
+      <h3>🔷 VLAN и 802.1Q</h3>
+      <table>
+        <tr><td>VLAN ID 1–4094</td><td>До 4094 VLAN (0 и 4095 зарезервированы)</td></tr>
+        <tr><td>802.1Q tag (4 байта)</td><td>TPID(0x8100)+PCP+DEI+VID(12 бит)</td></tr>
+        <tr><td>Native VLAN</td><td>Кадры без тега на trunk (по умолч. 1)</td></tr>
+        <tr><td>Access port</td><td>Один VLAN, кадры без тега</td></tr>
+        <tr><td>Trunk port</td><td>Несколько VLAN, кадры с тегом</td></tr>
+        <tr><td>SVI / Inter-VLAN</td><td>interface vlan10 → шлюз для VLAN 10</td></tr>
+        <tr><td>Router-on-a-stick</td><td>sub-if с dot1q encapsulation</td></tr>
+      </table>
+    </div>
+
+    <!-- 2: STP / RSTP -->
+    <div class="card l2">
+      <h3>🌳 STP / RSTP</h3>
+      <table>
+        <tr><td>802.1D / 802.1w</td><td>Классический STP / быстрый RSTP</td></tr>
+        <tr><td>Root Bridge</td><td>Наименьший Bridge ID (priority+MAC)</td></tr>
+        <tr><td>Port states (STP)</td><td>Blocking → Listening → Learning → Forwarding</td></tr>
+        <tr><td>Port states (RSTP)</td><td>Discarding → Learning → Forwarding</td></tr>
+        <tr><td>RSTP роль</td><td>Root / Designated / Alternate / Backup</td></tr>
+        <tr><td>Convergence</td><td>STP до 50с · RSTP — миллисекунды</td></tr>
+        <tr><td>PortFast / BPDU Guard</td><td>Access-порты — мгновенно + защита от петель</td></tr>
+        <tr><td>Rapid-PVST / MSTP</td><td>По экземпляру на VLAN / по группам VLAN</td></tr>
+      </table>
+    </div>
+
+    <!-- 3: MAC TABLE -->
+    <div class="card l2">
+      <h3>📇 MAC-таблица</h3>
+      <table>
+        <tr><td>Формат MAC</td><td>48 бит = OUI(24) + устройство(24)</td></tr>
+        <tr><td>Запись</td><td>MAC + порт + VLAN + время</td></tr>
+        <tr><td>Unknown unicast</td><td>Flooding на все порты VLAN</td></tr>
+        <tr><td>Broadcast / multicast</td><td>Flooding всегда</td></tr>
+        <tr><td>Aging</td><td>По умолчанию 300 с</td></tr>
+        <tr><td>CAM table</td><td>Аппаратная реализация MAC-таблицы</td></tr>
+        <tr><td>MAC flooding</td><td>Атака переполнения → утечка трафика</td></tr>
+      </table>
+    </div>
+
+    <!-- 4: LINK AGGREGATION -->
+    <div class="card l2">
+      <h3>🔗 Link Aggregation</h3>
+      <table>
+        <tr><td>LACP (802.3ad)</td><td>Согласование через LACPDU</td></tr>
+        <tr><td>Static (on)</td><td>Без согласования, риск петли</td></tr>
+        <tr><td>Balancing</td><td>src-mac, dst-mac, src-dst-ip, L4 port</td></tr>
+        <tr><td>Хэш</td><td>Один поток всегда идёт в один линк</td></tr>
+        <tr><td>MLAG / vPC / VSS</td><td>LAG между двумя коммутаторами</td></tr>
+        <tr><td>LACP mode</td><td>Active (инициирует) / Passive (отвечает)</td></tr>
+      </table>
+    </div>
+
+    <!-- 5: КАБЕЛИ И СРЕДА -->
+    <div class="card l2">
+      <h3>🔌 Кабели и стандарты</h3>
+      <table>
+        <tr><td>Cat5e</td><td>1G до 100 м</td></tr>
+        <tr><td>Cat6</td><td>1G до 100 м · 10G до 55 м</td></tr>
+        <tr><td>Cat6a / Cat7</td><td>10G до 100 м</td></tr>
+        <tr><td>Fiber SM (OS2)</td><td>До десятков км · 1310/1550 нм</td></tr>
+        <tr><td>Fiber MM (OM3/4)</td><td>До 550 м · 850 нм</td></tr>
+        <tr><td>Коннекторы</td><td>RJ-45 · LC · SC · MTP/MPO</td></tr>
+        <tr><td>1000BASE-T vs SX/LX</td><td>T = медь · SX/LX = оптика</td></tr>
+      </table>
+    </div>
+
+    <!-- 6: WI-FI -->
+    <div class="card l2">
+      <h3>📶 Wi-Fi — основы</h3>
+      <table>
+        <tr><td>802.11n (Wi-Fi 4)</td><td>2.4 / 5 ГГц · до 600 Мбит/с</td></tr>
+        <tr><td>802.11ac (Wi-Fi 5)</td><td>5 ГГц · до 6.9 Гбит/с</td></tr>
+        <tr><td>802.11ax (Wi-Fi 6/6E)</td><td>2.4/5/6 ГГц · OFDMA</td></tr>
+        <tr><td>Каналы 2.4 ГГц</td><td>1 · 6 · 11 (непересекающиеся)</td></tr>
+        <tr><td>Каналы 5 ГГц</td><td>UNII-1/2/2e/3 · ширины 20/40/80/160</td></tr>
+        <tr><td>Безопасность</td><td>WPA2 / WPA3 · WPA2-Enterprise (802.1X)</td></tr>
+        <tr><td>Roaming</td><td>802.11r/k/v — быстрое переключение</td></tr>
+        <tr><td>SSID vs BSSID</td><td>Имя сети vs MAC точки доступа</td></tr>
+      </table>
+    </div>
+
+    <!-- 7: ARP -->
+    <div class="card l2">
+      <h3>📞 ARP / NDP</h3>
+      <table>
+        <tr><td>ARP request</td><td>Broadcast «кто такой 10.0.0.5?»</td></tr>
+        <tr><td>ARP reply</td><td>Unicast «это я, MAC = …»</td></tr>
+        <tr><td>ARP-кэш</td><td>ip neigh / arp -a (aging ~30 мин)</td></tr>
+        <tr><td>Gratuitous ARP</td><td>Сообщить свой MAC без запроса</td></tr>
+        <tr><td>ARP spoofing</td><td>Подмена → MITM · защита: DAI</td></tr>
+        <tr><td>NDP</td><td>ARP для IPv6 (NS/NA)</td></tr>
+      </table>
+    </div>
+
+    <!-- 8: ТОЧКИ ОТКАЗА (ГДЕ ЛОМАЕТСЯ) -->
+    <div class="card l2">
+      <h3>🧭 Где что ломается (L1–L2)</h3>
+      <table>
+        <tr><td>Нет линка</td><td>L1 — кабель, порт, SFP, скорость/duplex</td></tr>
+        <tr><td>Ошибки CRC / FCS</td><td>Кабель, наводки, плохой коннектор</td></tr>
+        <tr><td>Дуплекс mismatch</td><td>Полудуплекс → коллизии · ставьте auto/auto</td></tr>
+        <tr><td>VLAN не работает</td><td>Trunk без нужного VLAN / native mismatch</td></tr>
+        <tr><td>Петля / broadcast storm</td><td>STP выключен, нет BPDU Guard</td></tr>
+        <tr><td>MAC flapping</td><td>Петля, loop, mirror-конфиг</td></tr>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ======================= СТРАНИЦА 2 — МАРШРУТИЗАЦИЯ И СЕРВИСЫ ======================= -->
+<div class="sheet">
+  <div class="sheet-header">
+    <strong>Сетевой инженер — часть 2</strong> · Маршрутизация · OSPF · BGP · NAT · VPN · карточки ✂
+  </div>
+
+  <div class="cards">
+
+    <!-- 1: СТАТИЧЕСКАЯ МАРШРУТИЗАЦИЯ -->
+    <div class="card l3">
+      <h3>➡️ Статическая маршрутизация</h3>
+      <table>
+        <tr><td>ip route 0.0.0.0/0 &lt;gw&gt;</td><td>Маршрут по умолчанию</td></tr>
+        <tr><td>ip route &lt;net&gt; &lt;mask&gt; &lt;gw&gt;</td><td>Статический маршрут</td></tr>
+        <tr><td>Longest Prefix Match</td><td>Побеждает более длинный префикс</td></tr>
+        <tr><td>Administrative Distance</td><td>Connected 0 · Static 1 · OSPF 110 · BGP 20</td></tr>
+        <tr><td>Floating static</td><td>Резерв через большой AD</td></tr>
+        <tr><td>Recursive lookup</td><td>Next-hop должен резолвиться</td></tr>
+        <tr><td>Null0</td><td>Маршрут-«в никуда» для суммирования</td></tr>
+      </table>
+    </div>
+
+    <!-- 2: OSPF -->
+    <div class="card l3">
+      <h3>🛣️ OSPF</h3>
+      <table>
+        <tr><td>Тип</td><td>Link-state · IGP · Dijkstra (SPF)</td></tr>
+        <tr><td>Areas</td><td>Area 0 = backbone · все остальные к ней</td></tr>
+        <tr><td>Router ID</td><td>Наибольший loopback-IP / priority</td></tr>
+        <tr><td>Neighbor states</td><td>Down → Init → 2-Way → ExStart → Exchange → Loading → Full</td></tr>
+        <tr><td>Hello / Dead</td><td>10с / 40с (broadcast) · 30/120 (NBMA)</td></tr>
+        <tr><td>Cost</td><td>ref-bw (10^8) / bandwidth интерфейса</td></tr>
+        <tr><td>Типы LSA</td><td>1 Router · 2 Network · 3 Summary · 5 External</td></tr>
+        <tr><td>DR / BDR</td><td>Выбор на широковещательном сегменте</td></tr>
+      </table>
+    </div>
+
+    <!-- 3: BGP -->
+    <div class="card l3">
+      <h3>🌍 BGP</h3>
+      <table>
+        <tr><td>Тип</td><td>Path-vector · EGP · TCP 179</td></tr>
+        <tr><td>eBGP / iBGP</td><td>Между AS / внутри AS (full-mesh или RR)</td></tr>
+        <tr><td>Best-path (кратко)</td><td>Weight → Local-Pref → AS-Path → Origin → MED → eBGP → IGP → Router-ID</td></tr>
+        <tr><td>AS-Path</td><td>Короче = лучше</td></tr>
+        <tr><td>Communities</td><td>Метки для политики (no-export, RTBH)</td></tr>
+        <tr><td>Next-hop-self</td><td>iBGP: сообщить себя как next-hop</td></tr>
+        <tr><td>Route Reflector</td><td>Масштабирование iBGP без full-mesh</td></tr>
+      </table>
+    </div>
+
+    <!-- 4: NAT -->
+    <div class="card svc">
+      <h3>🔀 NAT</h3>
+      <table>
+        <tr><td>SNAT (source NAT)</td><td>Подмена адреса источника</td></tr>
+        <tr><td>DNAT (port forward)</td><td>Подмена адреса назначения</td></tr>
+        <tr><td>PAT / MASQUERADE</td><td>Много клиентов → 1 IP : порты</td></tr>
+        <tr><td>1:1 NAT</td><td>Один внешний IP ↔ один внутренний</td></tr>
+        <tr><td>Hairpin NAT</td><td>Изнутри наружу через внешний IP</td></tr>
+        <tr><td>NAT64 / 464XLAT</td><td>IPv6 ↔ IPv4</td></tr>
+        <tr><td>CGNAT</td><td>Провайдерский NAT (RFC 6598)</td></tr>
+      </table>
+    </div>
+
+    <!-- 5: IPv6 -->
+    <div class="card svc">
+      <h3>🆔 IPv6 — кратко</h3>
+      <table>
+        <tr><td>128 бит</td><td>8 групп по 16 бит (hextet)</td></tr>
+        <tr><td>Сокращение</td><td>:: = одна группа нулей (только раз)</td></tr>
+        <tr><td>GUA 2000::/3</td><td>Глобальные адреса</td></tr>
+        <tr><td>ULA fc00::/7</td><td>Аналог частных адресов</td></tr>
+        <tr><td>Link-local fe80::/10</td><td>Всегда есть на интерфейсе</td></tr>
+        <tr><td>Loopback</td><td>::1</td></tr>
+        <tr><td>SLAAC</td><td>Автоконфиг из RA · DHCPv6 — опционально</td></tr>
+        <tr><td>NDP</td><td>NS/NA/RS/RA вместо ARP</td></tr>
+      </table>
+    </div>
+
+    <!-- 6: DHCP RELAY -->
+    <div class="card svc">
+      <h3>📡 DHCP и relay</h3>
+      <table>
+        <tr><td>DORA</td><td>Discover → Offer → Request → Ack</td></tr>
+        <tr><td>Broadcast</td><td>DHCP Discover — broadcast, не проходит L3</td></tr>
+        <tr><td>ip helper-address &lt;ip&gt;</td><td>Relay на интерфейсе шлюза</td></tr>
+        <tr><td>UDP 67 / 68</td><td>Сервер / клиент</td></tr>
+        <tr><td>Reservation</td><td>Привязка IP к MAC</td></tr>
+        <tr><td>Lease time</td><td>Время аренды (обычно 8–24 ч)</td></tr>
+        <tr><td>Rogue DHCP</td><td>DHCP snooping — защита</td></tr>
+      </table>
+    </div>
+
+    <!-- 7: VPN -->
+    <div class="card svc">
+      <h3>🔐 VPN</h3>
+      <table>
+        <tr><td>WireGuard</td><td>UDP 51820 · простая, быстрая</td></tr>
+        <tr><td>IPsec</td><td>IKEv2 · ESP (шифр) / AH (целостность)</td></tr>
+        <tr><td>Транспорт vs туннель</td><td>Только payload / весь пакет</td></tr>
+        <tr><td>OpenVPN</td><td>TLS · UDP 1194 · гибкая</td></tr>
+        <tr><td>Site-to-Site</td><td>IPsec туннель между филиалами</td></tr>
+        <tr><td>Remote Access</td><td>Клиент → концентратор (IKEv2, WG)</td></tr>
+        <tr><td>Split tunnel</td><td>Только нужные сети через VPN</td></tr>
+      </table>
+    </div>
+
+    <!-- 8: АНАЛИЗ ТРАФИКА -->
+    <div class="card tool">
+      <h3>🦈 Wireshark / tcpdump</h3>
+      <table>
+        <tr><td>tcpdump -i eth0 -nn</td><td>Все пакеты без резолва</td></tr>
+        <tr><td>-w cap.pcap</td><td>Писать в файл (для Wireshark)</td></tr>
+        <tr><td>host 10.0.0.5</td><td>Фильтр по IP</td></tr>
+        <tr><td>port 443</td><td>Фильтр по порту</td></tr>
+        <tr><td>tcp[tcpflags] &amp; tcp-syn != 0</td><td>Только SYN</td></tr>
+        <tr><td>ip.addr == 10.0.0.5</td><td>Wireshark: по IP</td></tr>
+        <tr><td>tcp.flags.syn==1</td><td>Wireshark: SYN</td></tr>
+        <tr><td>http.request.method==GET</td><td>Wireshark: HTTP GET</td></tr>
+        <tr><td>SPAN / TAP</td><td>Зеркало порта / аппаратный разветвитель</td></tr>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
